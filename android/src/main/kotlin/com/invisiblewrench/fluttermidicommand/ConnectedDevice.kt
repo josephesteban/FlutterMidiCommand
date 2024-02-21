@@ -98,16 +98,16 @@ class ConnectedDevice : Device {
 
     override fun close() {
         Log.d("FlutterMIDICommand", "Flush input port ${this.inputPort}")
-        this.inputPort?.flush()
+        this.inputPort?.runCatching { flush() }
         Log.d("FlutterMIDICommand", "Close input port ${this.inputPort}")
-        this.inputPort?.close()
+        this.inputPort?.runCatching { close() }
         Log.d("FlutterMIDICommand", "Close output port ${this.outputPort}")
-        this.outputPort?.close()
+        this.outputPort?.runCatching { close() }
         Log.d("FlutterMIDICommand", "Disconnect receiver ${this.receiver}")
         this.outputPort?.disconnect(this.receiver)
         this.receiver = null
         Log.d("FlutterMIDICommand", "Close device ${this.midiDevice}")
-        this.midiDevice.close()
+        this.midiDevice.runCatching { close() }
 
         setupStreamHandler?.send("deviceDisconnected")
     }
