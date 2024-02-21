@@ -614,10 +614,11 @@ class FlutterMidiCommandPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
 
     override fun onDeviceRemoved(device: MidiDeviceInfo?) {
       super.onDeviceRemoved(device)
-      device?.also {
-        Log.d("FlutterMIDICommand","MIDI device removed $it")
-        var id = Device.deviceIdForInfo(it)
+      device?.also { deviceInfo ->
+        Log.d("FlutterMIDICommand","MIDI device removed $deviceInfo")
+        val id = Device.deviceIdForInfo(deviceInfo)
         connectedDevices[id]?.also {
+          it.close()
           Log.d("FlutterMIDICommand","remove removed device $it")
           connectedDevices.remove(id)
         }
