@@ -619,7 +619,9 @@ class FlutterMidiCommandPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
         val id = Device.deviceIdForInfo(it)
         connectedDevices[id]?.also {
           Log.d("FlutterMIDICommand","remove removed device $it")
-          connectedDevices.remove(id)?.close()
+          connectedDevices.remove(id)?.runCatching {
+            close()
+          }
         }
         this@FlutterMidiCommandPlugin.setupStreamHandler.send("deviceLost")
       }
